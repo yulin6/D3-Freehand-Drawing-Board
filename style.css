@@ -1,0 +1,21 @@
+#canvas {
+    border:1px solid black;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+/* #colorPaletteCol {
+    width: 100px;
+    float: left;
+    height: 300px;
+        background-color: blue;
+}
+
+#strokeWidthCol {
+    width: 200px;
+    float: left;
+    height: 300px;
+    background-color: green;
+} */
