@@ -16,7 +16,7 @@ let selectedColor = 'red';
 let selectedStroke = '2';
 
 
-svg.selectAll('.colorButton')
+let colorButtons = svg.selectAll('.colorButton')
     .data(colors)
     .enter()
     .append('rect')
@@ -27,7 +27,7 @@ svg.selectAll('.colorButton')
     .attr('height', boxSize)
     .attr('fill', (d) => { return d; })
     .attr('stroke', (d) => {
-        if (d == selectedColor) return '#000000';
+        if (d == selectedColor || d == 'white') return '#000000';
         else return null;
     })
     .attr('stroke-width', (d) => {
@@ -35,6 +35,7 @@ svg.selectAll('.colorButton')
     })
     .on('click', (d) => {
         selectedColor = d;
+        reselect();
     });
 
 svg.selectAll('.stroke')
@@ -46,10 +47,10 @@ svg.selectAll('.stroke')
     .attr('cy', (d, i) => { return i * (boxSize + 10) + 30; })
     .attr('r', (d) => { return d })
     .attr('height', boxSize)
-    .attr('fill', 'black')
+    .attr('fill', selectedColor)
 
 
-svg.selectAll('.strokeButton')
+let strokeButtons = svg.selectAll('.strokeButton')
     .data(strokes)
     .enter()
     .append('rect')
@@ -65,8 +66,43 @@ svg.selectAll('.strokeButton')
         else return 1;
     })
     .on('click', (d) => {
-        // selectedColor = d;
+        selectedStroke = d;
+        reselect();
     });
+
+function reselect() {
+    // console.log(selectedColor);
+    svg.selectAll('.colorButton')
+    .attr('stroke', (d) => {
+        if (d == selectedColor || d == 'white') return '#000000';
+        else return null;
+    })
+    .attr('stroke-width', (d) => {
+        if (d == selectedColor) return 3;
+    })
+
+    svg.selectAll('.stroke')
+    .attr('fill', selectedColor)
+    .attr('stroke', () => {return selectedColor == 'white'? '#000000' : null});
+
+
+    svg.selectAll('.strokeButton')
+        .attr('stroke', '#000000')
+        .attr('stroke-width', (d) => {
+            if (d == selectedStroke) return 3
+            else return 1;
+        })
+
+    
+
+    // strokeButtons.forEach((d) => {
+    //     d.attr('stroke', '#000000')
+    //     .attr('stroke-width', (d) => {
+    //         if (d == selectedStroke) return 3
+    //         else return 1;
+    //     })
+    // })
+}
 
 svg.append('text')
     .attr('font-family', 'FontAwesome')
