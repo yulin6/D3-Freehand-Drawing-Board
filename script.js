@@ -7,9 +7,45 @@ let svg = d3.select("#container")
     .attr("height", height)
     .attr('id', 'canvas');
 
+
+let ptdata = [];
+let path;
+
+let line = d3.svg.line()
+    .interpolate("bundle")
+    .tension(1)
+    .x(function (d, i) { return d.x; })
+    .y(function (d, i) { return d.y; });
+
+
+svg.on("mousedown", listen)
+    .on("mouseup", () => { svg.on("mousemove", null); })
+
+
+function listen() {
+    ptdata = [];
+    path = svg.append("path")
+        .data([ptdata])
+        .attr("stroke", selectedColor)
+        .attr('stroke-width', selectedStroke)
+        .attr('fill', 'none')
+
+    svg.on("mousemove", onmove);
+}
+
+
+function onmove() {
+    // console.log(this)
+    let point = d3.mouse(this);
+
+    ptdata.push({ x: point[0], y: point[1] });
+    path.attr("d", function (d) { return line(d); })
+}
+
+
 let colors = ["red", "orange", "yellow", "green", "blue", " purple",
     "black", "white", "brown"]
-let strokes = ['2', '4', '6', '9', '12']
+let strokeWidth = ['2', '4', '6', '9', '12']
 
 let boxSize = 40;
 let selectedColor = 'red';
@@ -39,7 +75,7 @@ let colorButtons = svg.selectAll('.colorButton')
     });
 
 svg.selectAll('.stroke')
-    .data(strokes)
+    .data(strokeWidth)
     .enter()
     .append('circle')
     .attr('class', 'stroke')
@@ -51,7 +87,7 @@ svg.selectAll('.stroke')
 
 
 let strokeButtons = svg.selectAll('.strokeButton')
-    .data(strokes)
+    .data(strokeWidth)
     .enter()
     .append('rect')
     .attr('class', 'strokeButton pointer')
@@ -73,17 +109,17 @@ let strokeButtons = svg.selectAll('.strokeButton')
 function reselect() {
     // console.log(selectedColor);
     svg.selectAll('.colorButton')
-    .attr('stroke', (d) => {
-        if (d == selectedColor || d == 'white') return '#000000';
-        else return null;
-    })
-    .attr('stroke-width', (d) => {
-        if (d == selectedColor) return 3;
-    })
+        .attr('stroke', (d) => {
+            if (d == selectedColor || d == 'white') return '#000000';
+            else return null;
+        })
+        .attr('stroke-width', (d) => {
+            if (d == selectedColor) return 3;
+        })
 
     svg.selectAll('.stroke')
-    .attr('fill', selectedColor)
-    .attr('stroke', () => {return selectedColor == 'white'? '#000000' : null});
+        .attr('fill', selectedColor)
+        .attr('stroke', () => { return selectedColor == 'white' ? '#000000' : null });
 
 
     svg.selectAll('.strokeButton')
@@ -92,16 +128,6 @@ function reselect() {
             if (d == selectedStroke) return 3
             else return 1;
         })
-
-    
-
-    // strokeButtons.forEach((d) => {
-    //     d.attr('stroke', '#000000')
-    //     .attr('stroke-width', (d) => {
-    //         if (d == selectedStroke) return 3
-    //         else return 1;
-    //     })
-    // })
 }
 
 svg.append('text')
@@ -111,5 +137,4 @@ svg.append('text')
     .attr('y', 40)
     .attr('class', 'pointer')
     .text(function (d) { return '\uf2ed' })
-
-
+    .on('click', () => {console.log('sdf')})

@@ -6,6 +6,14 @@
     cursor: pointer;
 }
 
+.line {
+    cursor: crosshair;
+    fill: none;
+    stroke: #000;
+    stroke-width: 2px;
+    stroke-linejoin: round;
+  }
+
 /* #colorPaletteCol {
     width: 100px;
     float: left;
